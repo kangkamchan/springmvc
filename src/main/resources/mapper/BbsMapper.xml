@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.fullstack7.springmvc.mapper.BbsMapper">
+    <select id="totalCountAll" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_bbs
+    </select>
+    <select id="totalCount" parameterType="net.fullstack7.springmvc.dto.PageDTO" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_bbs
+        WHERE 1=1
+        <if test="searchWord != null and searchWord !=''">
+            AND ${searchCategory} LIKE CONCAT("%",#{searchWord},"%")
+        </if>
+    </select>
+    <select id="listAll" resultType="net.fullstack7.springmvc.domain.BbsVO">
+        SELECT *
+        FROM tbl_bbs
+        ORDER BY idx DESC
+    </select>
+    <select id="listWithPage" resultType="net.fullstack7.springmvc.domain.BbsVO">
+        SELECT *
+        FROM tbl_bbs
+        ORDER BY idx DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="list" resultType="net.fullstack7.springmvc.domain.BbsVO">
+        SELECT *
+        FROM tbl_bbs
+        WHERE 1=1
+        <if test="searchWord != null and searchWord !=''">
+            AND ${searchCategory} LIKE CONCAT("%",#{searchWord},"%")
+        </if>
+        ORDER BY ${sortField} ${sortOrder}
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="view" resultType="net.fullstack7.springmvc.domain.BbsVO">
+       SELECT *
+       FROM tbl_bbs
+       WHERE idx = #{idx}
+    </select>
+    <select id="regist">
+        INSERT INTO tbl_bbs(title,content,memberId,displayDate)
+        VALUES(#{title},#{content},#{memberId},#{displayDate})
+    </select>
+    <update id="modify">
+        UPDATE tbl_bbs
+        SET title=#{title}, content=#{content}, displayDate=#{displayDate}
+        WHERE idx=#{idx}
+    </update>
+    <delete id="delete">
+        DELETE
+        FROM tbl_bbs
+        WHERE idx=#{idx}
+    </delete>
+</mapper>
